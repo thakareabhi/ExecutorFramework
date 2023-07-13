@@ -31,7 +31,7 @@ public class Main {
 
         ExecutorService excsr= Executors.newCachedThreadPool();
         for(int i=0;i<100;i++){
-            exsr.execute(new TaskClassExecutorFramework());
+            excsr.execute(new TaskClassExecutorFramework());
         }
 
         System.out.println("Scheduled Class Threads Running in Parallel");
@@ -91,6 +91,29 @@ public class Main {
                 ex.printStackTrace();
             }
         }
+
+        List<Future> futList= new ArrayList<>();
+        ExecutorService executorServiceCallable=Executors.newFixedThreadPool(10);
+
+        for(int i=0;i<100;i++){
+            Future<Integer> future=executorServiceCallable.submit(new CallableTask());
+            futList.add(future);
+        }
+
+        futList.forEach(
+                f-> {
+                    try {
+                        System.out.println(f.get());
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    } catch (ExecutionException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
+
+
+
 
         //Cancel the task ()
         //future.cancel(mayInterruptifRunning:true/false);
